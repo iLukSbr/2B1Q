@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-from gui import create_gui
+from gui.gui import create_gui
 
 def main():
     if len(sys.argv) < 2:
@@ -20,7 +20,7 @@ def main():
         from sender import send_message
         send_message(message)
     elif action == "receive":
-        from receiver import receive_message
+        from transmission.receiver import receive_message
         receive_message()
     else:
         print("Ação desconhecida. Use 'gui', 'send' ou 'receive'.")

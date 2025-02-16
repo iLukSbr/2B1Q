@@ -3,7 +3,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from sender import send_message
-from receiver import receive_message
+from transmission.receiver import receive_message
 import matplotlib.pyplot as plt
 
 def send_action(entry_message):
