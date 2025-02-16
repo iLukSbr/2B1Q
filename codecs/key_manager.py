@@ -1,4 +1,5 @@
 from cryptography.fernet import Fernet
+import os
 
 class KeyManager:
     def __init__(self):
@@ -7,8 +8,11 @@ class KeyManager:
         self.load_key()
 
     def load_key(self):
-        with open(self.key_path, 'rb') as f:
-            self.key = f.read()
+        if os.path.exists(self.key_path):
+            with open(self.key_path, 'rb') as f:
+                self.key = f.read()
+        else:
+            self.generate_key()
 
     def save_key(self):
         with open(self.key_path, 'wb') as f:
@@ -18,10 +22,5 @@ class KeyManager:
         self.key = Fernet.generate_key()
         self.save_key()
 
-    def encrypt(self, data):
-        f = Fernet(self.key)
-        return f.encrypt(data)
-
-    def decrypt(self, data):
-        f = Fernet(self.key)
-        return f.decrypt(data)
+    def get_key(self):
+        return self.key
