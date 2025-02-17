@@ -1,7 +1,4 @@
 class BinaryConverter:
-    def __init__(self):
-        return
-
     @staticmethod
     def utf8_to_binary(data):
         return ''.join(format(ord(char), '08b') for char in data)
