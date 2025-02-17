@@ -7,12 +7,18 @@ The key is repeated so that it has the same size as the message.
 from message_codecs import KeyManager
 
 class XORCipher:
-    key = KeyManager.get_binary_key()
+    key = None
+
+    @staticmethod
+    def initialize_key():
+        if XORCipher.key is None:
+            XORCipher.key = KeyManager.get_binary_key()
+            if not XORCipher.key:
+                raise ValueError("Failed to initialize the key.")
 
     @staticmethod
     def encrypt(bit_array):
-        if XORCipher.key is None:
-            raise ValueError("A chave não foi definida.")
+        XORCipher.initialize_key()
         encrypted_bits = []
         for i in range(len(bit_array)):
             encrypted_bits.append(bit_array[i] ^ XORCipher.key[i % len(XORCipher.key)])
@@ -20,8 +26,7 @@ class XORCipher:
 
     @staticmethod
     def decrypt(bit_array):
-        if XORCipher.key is None:
-            raise ValueError("A chave não foi definida.")
+        XORCipher.initialize_key()
         decrypted_bits = []
         for i in range(len(bit_array)):
             decrypted_bits.append(bit_array[i] ^ XORCipher.key[i % len(XORCipher.key)])

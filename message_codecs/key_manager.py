@@ -10,33 +10,48 @@ import os
 import base64
 
 class KeyManager:
-    key_path = '.credentials'
     key = None
 
     @staticmethod
+    def get_key_path():
+        script_dir = os.path.dirname(__file__)
+        return os.path.join(script_dir, '.credentials')
+
+    @staticmethod
     def load_key():
-        if os.path.exists(KeyManager.key_path):
-            with open(KeyManager.key_path, 'rb') as f:
+        key_path = KeyManager.get_key_path()
+        if os.path.exists(key_path):
+            with open(key_path, 'rb') as f:
                 KeyManager.key = f.read()
+                if not KeyManager.key:
+                    print(f"Key file {key_path} is empty, generating new key.")
+                    KeyManager.generate_key()
+                else:
+                    print(f"Key loaded from {key_path}")
         else:
             KeyManager.generate_key()
 
     @staticmethod
     def save_key():
-        with open(KeyManager.key_path, 'wb') as f:
+        key_path = KeyManager.get_key_path()
+        with open(key_path, 'wb') as f:
             f.write(KeyManager.key)
+        print(f"Key saved to {key_path}")
 
     @staticmethod
     def generate_key():
         KeyManager.key = Fernet.generate_key()
         KeyManager.save_key()
+        print("New key generated")
 
     @staticmethod
     def get_raw_key():
         if KeyManager.key is None:
             KeyManager.load_key()
+        if not KeyManager.key:
+            raise ValueError("Failed to load or generate the key.")
         return KeyManager.key
-    
+
     @staticmethod
     def get_decoded_key():
         raw_key = KeyManager.get_raw_key()

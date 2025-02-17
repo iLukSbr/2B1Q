@@ -1,30 +1,5 @@
-#!/usr/bin/env python
+from gui import App
 
-import sys
-from gui.gui import create_gui
-
-def main():
-    if len(sys.argv) < 2:
-        print("Uso: python main.py <gui/send/receive> [mensagem]")
-        sys.exit(1)
-
-    action = sys.argv[1]
-
-    if action == "gui":
-        create_gui()
-    elif action == "send":
-        if len(sys.argv) < 3:
-            print("Uso: python main.py send <mensagem>")
-            sys.exit(1)
-        message = sys.argv[2]
-        from sender import send_message
-        send_message(message)
-    elif action == "receive":
-        from transmission.receiver import receive_message
-        receive_message()
-    else:
-        print("Ação desconhecida. Use 'gui', 'send' ou 'receive'.")
-        sys.exit(1)
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    app_instance = App()
+    app_instance.run()

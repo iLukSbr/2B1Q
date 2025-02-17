@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css">
+            margin: 2rem;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Message Transmission</h1>
+    <label>
+        <input type="radio" name="mode" value="sender" checked> Sender
+    </label>
+    <label>
+        <input type="radio" name="mode" value="receiver"> Receiver
+    </label>
+
+    <div id="sender" class="mode">
+        <form id="sendForm">
+            <label for="message">Message:</label>
+            <input type="text" id="message" name="message" required>
+            <button type="submit">Send</button>
+        </form>
+        <h2>Sender Signal:</h2>
+        <img id="senderGraph" src="/graph/sender" alt="Sender Signal Graph">
+    </div>
+
+    <div id="receiver" class="mode hidden">
+        <h2>Received Message:</h2>
+        <pre id="receivedMessage"></pre>
+        <h2>Receiver Signal:</h2>
+        <img id="receiverGraph" src="/graph/receiver" alt="Receiver Signal Graph">
+    </div>
+
+    <script>
+        document.querySelectorAll('input[name="mode"]').forEach((elem) => {
+            elem.addEventListener("change", function(event) {
+                document.querySelectorAll('.mode').forEach((div) => {
+                    div.classList.add('hidden');
+                });
+                document.getElementById(event.target.value).classList.remove('hidden');
+            });
+        });
+
+        document.getElementById('sendForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const message = document.getElementById('message').value;
+            fetch('/send', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `message=${encodeURIComponent(message)}`,
+            }).then(response => response.json()).then(data => {
+                alert(data.status);
+                document.getElementById('senderGraph').src = '/graph/sender';
+            });
+        });
+
+        function fetchReceivedMessage() {
+            fetch('/receive')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('receivedMessage').textContent = data.message;
+                    document.getElementById('receiverGraph').src = '/graph/receiver';
+                });
+        }
+
+        if (document.querySelector('input[name="mode"]:checked').value === 'receiver') {
+            setInterval(fetchReceivedMessage, 1000);
+        }
+    </script>
+</body>
+</html>

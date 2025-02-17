@@ -1,14 +1,25 @@
 import socket
 import configparser
+import os
 from message_codecs import *
 
 class MessageReceiver:
-    state_duration = 500 # milliseconds
+    state_duration = 500  # milliseconds
 
     @staticmethod
-    def receive_message(self):
+    def receive_message():
         config = configparser.ConfigParser()
-        config.read('config.ini')
+        script_dir = os.path.dirname(__file__)
+        config_path = os.path.join(script_dir, 'config.ini')
+
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Config file not found: {config_path}")
+
+        config.read(config_path)
+
+        if 'server' not in config:
+            raise KeyError("The 'server' section is missing in the config file.")
+
         host = config['server']['host']
         port = int(config['server']['port'])
 
@@ -31,9 +42,14 @@ class MessageReceiver:
                     else:
                         muted_count = 0
                         data += chunk
-                self.signal = list(data)
-                self.encrypted_message = Flipper2B1Q.voltage_to_binary(signal)
-                self.decoded_message = XORCipher.decrypt(encrypted_message)
-                self.message = BinaryConverter.utf8_from_binary(decoded_message)
-                print(f"Mensagem recebida: {self.message}")
-                return self.message
+                print(f"Raw data received: {data}")
+                signal = [byte - 128 for byte in data]  # Map byte values back to voltage values
+                print(f"Signal: {signal}")
+                encrypted_message = Flipper2B1Q.voltage_to_binary(signal)
+                print(f"Encrypted message: {encrypted_message}")
+                encrypted_message = [int(bit) for bit in encrypted_message]  # Convert string to list of integers
+                decoded_message = XORCipher.decrypt(encrypted_message)
+                print(f"Decoded message: {decoded_message}")
+                message = BinaryConverter.utf8_from_binary(decoded_message)
+                print(f"Mensagem recebida: {message}")
+                return message

@@ -1,28 +1,36 @@
 import socket
 import configparser
-import time
+import os
 from message_codecs import *
 
 class MessageSender:
+    state_duration = 500  # milliseconds
+
     @staticmethod
-    def send_message(self, message):
+    def send_message(message):
         config = configparser.ConfigParser()
-        config.read('config.ini')
+        script_dir = os.path.dirname(__file__)
+        config_path = os.path.join(script_dir, 'config.ini')
+
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"Config file not found: {config_path}")
+
+        config.read(config_path)
+
+        if 'server' not in config:
+            raise KeyError("The 'server' section is missing in the config file.")
+
         host = config['server']['host']
         port = int(config['server']['port'])
-        bit_interval = int(config['server']['bit_interval'])
-        stop_interval = int(config['server']['stop_interval'])
 
-        # Add STX and ETX to the message
-        self.message = f'\x02{message}\x03'
-        self.binary_message = BinaryConverter.utf8_to_binary(message)
-        self.encrypted_message = XORCipher.encrypt(self.binary_message)
-        self.message_signal = Flipper2B1Q.binary_to_voltage(self.encrypted_message)
+        binary_message = BinaryConverter.utf8_to_binary(message)
+        print(f"Binary message: {binary_message}")
+        encrypted_message = XORCipher.encrypt(binary_message)
+        print(f"Encrypted message: {encrypted_message}")
+        signal = Flipper2B1Q.binary_to_voltage(encrypted_message)
+        print(f"Signal: {signal}")
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((host, port))
-            for bit in self.message_signal:
-                s.sendall(bit.encode('utf-8'))
-                time.sleep(bit_interval)
-            time.sleep(stop_interval)
-            print(f"Mensagem enviada: {self.message_signal}")
+            s.sendall(bytes([byte + 128 for byte in signal]))
+            print("Mensagem enviada:", signal)
