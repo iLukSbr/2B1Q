@@ -1,10 +1,12 @@
 import socket
 import configparser
-from cryptography import decrypt_message
+from message_codecs import *
 
 class MessageReceiver:
+    state_duration = 500 # milliseconds
+
     @staticmethod
-    def receive_message():
+    def receive_message(self):
         config = configparser.ConfigParser()
         config.read('config.ini')
         host = config['server']['host']
@@ -17,8 +19,21 @@ class MessageReceiver:
             conn, addr = s.accept()
             with conn:
                 print(f"Conectado por {addr}")
-                encrypted_message = conn.recv(1024).decode('utf-8')
-                decoded_message = decrypt_message(encrypted_message)
-                signal = [int(bit) for bit in encrypted_message]
-                print(f"Mensagem recebida: {decoded_message}")
-                return encrypted_message, decoded_message, signal
+                data = b''
+                muted_count = 0
+                while True:
+                    chunk = conn.recv(1024)
+                    if not chunk:
+                        muted_count += 1
+                        if muted_count >= 3:
+                            print("End of message")
+                            break
+                    else:
+                        muted_count = 0
+                        data += chunk
+                self.signal = list(data)
+                self.encrypted_message = Flipper2B1Q.voltage_to_binary(signal)
+                self.decoded_message = XORCipher.decrypt(encrypted_message)
+                self.message = BinaryConverter.utf8_from_binary(decoded_message)
+                print(f"Mensagem recebida: {self.message}")
+                return self.message

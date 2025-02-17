@@ -1,21 +1,28 @@
 import socket
 import configparser
-from cryptography import encrypt_message
+import time
 from message_codecs import *
 
 class MessageSender:
     @staticmethod
-    def send_message(message):
+    def send_message(self, message):
         config = configparser.ConfigParser()
         config.read('config.ini')
         host = config['server']['host']
         port = int(config['server']['port'])
+        bit_interval = int(config['server']['bit_interval'])
+        stop_interval = int(config['server']['stop_interval'])
 
-        binary_message = BinaryConverter.utf8_to_binary(message)
-        encrypted_message = XORCipher.encrypt_message(binary_message)
-        message_signal = ISDN2B1Q.binary_to_voltage(encrypted_message)
+        # Add STX and ETX to the message
+        self.message = f'\x02{message}\x03'
+        self.binary_message = BinaryConverter.utf8_to_binary(message)
+        self.encrypted_message = XORCipher.encrypt(self.binary_message)
+        self.message_signal = Flipper2B1Q.binary_to_voltage(self.encrypted_message)
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((host, port))
-            s.sendall(encrypted_message.encode('utf-8'))
-            print(f"Mensagem enviada: {encrypted_message}")
+            for bit in self.message_signal:
+                s.sendall(bit.encode('utf-8'))
+                time.sleep(bit_interval)
+            time.sleep(stop_interval)
+            print(f"Mensagem enviada: {self.message_signal}")
