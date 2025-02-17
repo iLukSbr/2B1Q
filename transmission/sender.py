@@ -27,7 +27,8 @@ class MessageSender:
         print(f"Binary message: {binary_message}")
         encrypted_message = XORCipher.encrypt(binary_message)
         print(f"Encrypted message: {encrypted_message}")
-        signal = Flipper2B1Q.binary_to_voltage(encrypted_message)
+        signal = encrypted_message
+        # signal = Flipper2B1Q.binary_to_voltage(encrypted_message)
         print(f"Signal: {signal}")
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

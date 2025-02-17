@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, send_file
 from zeroconf import ServiceInfo, Zeroconf
 import socket
 from gui.graph import Graph
+from transmission import *
 
 class App:
     def __init__(self):
@@ -19,13 +20,15 @@ class App:
         def send_message():
             message = request.form['message']
             print(f"Message to send: {message}")
-            signal = [-1, 1, 3, -3, 3, 1, -3, -1, 1, -1, 3, 1, -1, 1, -3, 3]  # Dummy signal
+            sender = Sender()
+            signal = sender.send_message(message)  # Use Sender class to get the signal
             Graph.plot_voltage_time(signal, "Sender Signal", "static/sender_signal.png")
             return jsonify(status="Message sent")
 
         @self.app.route('/receive', methods=['GET'])
         def receive_message():
-            self.received_signal = [-1, 1, 3, -3, 3, 1, -3, -1, 1, -1, 3, 1, -1, 1, -3, 3]  # Dummy signal
+            receiver = Receiver()  # Use Receiver class to get the signal
+            self.received_signal = receiver.receive_message()
             Graph.plot_voltage_time(self.received_signal, "Receiver Signal", "static/receiver_signal.png")
             return jsonify(message=self.received_message)
 
