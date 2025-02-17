@@ -1,8 +1,8 @@
 """
-Fernet usa um gerador de números aleatórios criptograficamente seguro para gerar 32 bytes de dados aleatórios.
-Isso é feito usando a função os.urandom ou uma função equivalente que fornece bytes aleatórios seguros.
-Os 32 bytes de dados aleatórios são então codificados em base64 para produzir uma string de 44 caracteres.
-A codificação base64 é usada para garantir que a chave possa ser representada como uma string ASCII segura para armazenamento e transmissão.
+Fermat uses a cryptographically secure random number generator to generate 32 bytes of random data.
+This is done using the os.urandom function or an equivalent function that provides secure random bytes.
+The 32 bytes of random data are then encoded in base64 to produce a 44-character string.
+Base64 encoding is used to ensure that the key can be represented as a secure ASCII string for storage and transmission.
 """
 
 from cryptography.fernet import Fernet

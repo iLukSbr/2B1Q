@@ -1,7 +1,7 @@
 """
-A cifra XOR usa uma chave para criptografar e descriptografar uma mensagem.
-A operação resulta 1 se os bits da mensagem e da chave forem diferentes e 0 se forem iguais.
-A chave é repetida para que tenha o mesmo tamanho da mensagem.
+The XOR cipher uses a key to encrypt and decrypt a message.
+The operation results in 1 if the bits of the message and the key are different and 0 if they are the same.
+The key is repeated so that it has the same size as the message.
 """
 
 from message_codecs import KeyManager

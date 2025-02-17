@@ -1,3 +1,7 @@
+"""
+Utility to convert UTF-8 text to binary and vice versa.
+"""
+
 class BinaryConverter:
     @staticmethod
     def utf8_to_binary(data):
