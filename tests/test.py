@@ -8,7 +8,8 @@ from transmission.receiver import MessageReceiver
 
 class TestMessageTransmission(unittest.TestCase):
     def setUp(self):
-        self.message = "Olá, mundo!"
+        self.message = "Olá, mundo! Teste áàãâéè~eêíìî~iõóòôúù~uûüïöëäç!@#$%¨&*()_+{`^}?:><-=[]~´/;.,°ºª¬¢£³²¹\"\'' 0123456789"
+        print(f"Message to send: {self.message}")
         self.receiver_thread = threading.Thread(target=self.start_receiver)
         self.receiver_thread.start()
         time.sleep(1)  # Give the receiver some time to start

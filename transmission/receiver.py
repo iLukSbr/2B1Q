@@ -44,9 +44,8 @@ class MessageReceiver:
                         data += chunk
                 print(f"Raw data received: {data}")
                 signal = [byte - 128 for byte in data]  # Map byte values back to voltage values
-                # print(f"Signal: {signal}")
-                # encrypted_message = Flipper2B1Q.voltage_to_binary(signal)
-                encrypted_message = signal
+                print(f"Signal: {signal}")
+                encrypted_message = LineCode2B1Q.decode_2b1q(signal)
                 print(f"Encrypted message: {encrypted_message}")
                 encrypted_message = [int(bit) for bit in encrypted_message]  # Convert string to list of integers
                 decoded_message = XORCipher.decrypt(encrypted_message)
