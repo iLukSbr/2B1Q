@@ -1,59 +1,17 @@
-import plotly.graph_objs as go
-from plotly.subplots import make_subplots
-import plotly.io as pio
-import numpy as np
-import time
+import matplotlib.pyplot as plt
 
-class Graph:
-    def __init__(self):
-        self.fig = make_subplots(rows=1, cols=1)
-        self.fig.update_layout(title='Real-Time Voltage Level', xaxis_title='Time', yaxis_title='Voltage',
-                               showlegend=False)
+# Função para criar o gráfico
+def create_graph(data, titulo):
+    tuple_data = tuple(data[i:i+2] for i in range(0, len(data), 2))  # Agrupa os dados em pares
+    x = list(range(len(tuple_data)))
 
-        # Initial data and trace with glowing effect
-        self.data = [0]
-        self.x_data = [0]
-        self.line_trace = go.Scatter(
-            x=self.x_data,
-            y=self.data,
-            mode='lines',
-            line=dict(color='blue', width=2)
-        )
-        self.head_trace = go.Scatter(
-            x=[self.x_data[-1]],
-            y=[self.data[-1]],
-            mode='markers',
-            marker=dict(size=10, color='red', opacity=0.8, symbol='circle')
-        )
+    # Configura posições dos elementos no eixo y
+    y_positions = {"-3": 0, "-1": 2, "+1": 4, "+3": 6}
+    y = [y_positions[str(value)] for value in tuple_data]
 
-        self.fig.add_trace(self.line_trace)
-        self.fig.add_trace(self.head_trace)
-
-    def update_animation(self, frame):
-        x, y = frame
-        self.x_data.append(x)
-        self.data.append(y)
-
-        # Update trace data
-        self.line_trace.x = self.x_data
-        self.line_trace.y = self.data
-        self.head_trace.x = [x]
-        self.head_trace.y = [y]
-
-        # Clear previous traces
-        self.fig.data = []
-
-        # Add updated traces
-        self.fig.add_trace(self.line_trace)
-        self.fig.add_trace(self.head_trace)
-
-        # Adjust x-axis range for real-time view
-        self.fig.update_xaxes(range=[max(0, x - 10), x + 1])
-
-    def animate(self, data_stream):
-        for frame in data_stream:
-            self.update_animation(frame)
-            time.sleep(0.1)  # Adjust the sleep time as needed
-
-    def show(self):
-        pio.show(self.fig, auto_open=True)
+    plt.step(x, y, where='post')
+    plt.yticks([0, 2, 4, 6], ['-3', '-1', '+1', '+3'])
+    plt.title(titulo)
+    plt.xlabel('Tempo')
+    plt.ylabel('Estado')
+    plt.show(block=False)
