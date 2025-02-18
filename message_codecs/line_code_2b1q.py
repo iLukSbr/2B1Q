@@ -1,5 +1,5 @@
 """
-    Algoritmo de codificação de linha 2B1Q.
+Algoritmo de codificação de linha 2B1Q.
 """
 
 class LineCode2B1Q:

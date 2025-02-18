@@ -1,7 +1,7 @@
 """
 The XOR cipher uses a key to encrypt and decrypt a message.
 The operation results in 1 if the bits of the message and the key are different and 0 if they are the same.
-The key is repeated so that it has the same size as the message.
+The key is repeated or trimmed so that it has the same size as the message.
 """
 
 from message_codecs import KeyManager

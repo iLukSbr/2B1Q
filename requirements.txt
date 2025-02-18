@@ -1,4 +1,8 @@
 cryptography
 flask
-matplotlib
+flask-vite
+ipython
+numpy
+plotly
+pywebview
 zeroconf

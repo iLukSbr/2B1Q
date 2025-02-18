@@ -9,7 +9,7 @@ from transmission.receiver import MessageReceiver
 class TestMessageTransmission(unittest.TestCase):
     def setUp(self):
         self.message = "Olá, mundo! Teste áàãâéè~eêíìî~iõóòôúù~uûüïöëäç!@#$%¨&*()_+{`^}?:><-=[]~´/;.,°ºª¬¢£³²¹\"\'' 0123456789"
-        print(f"Message to send: {self.message}")
+        logger.debug(f"Message to send: {self.message}")
         self.receiver_thread = threading.Thread(target=self.start_receiver)
         self.receiver_thread.start()
         time.sleep(1)  # Give the receiver some time to start
@@ -20,9 +20,10 @@ class TestMessageTransmission(unittest.TestCase):
 
     def test_message_transmission(self):
         sender = MessageSender()
-        sender.send_message(self.message)
+        sender_response = sender.send_message(self.message)
+        sender.send_signal(sender_response['encoded_message'])
         self.receiver_thread.join()
-        self.assertEqual(self.message, self.received_message)
+        self.assertEqual(self.message, self.received_message['message'])
 
     def tearDown(self):
         # Clean up any resources if needed

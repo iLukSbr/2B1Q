@@ -5,17 +5,20 @@ The 32 bytes of random data are then encoded in base64 to produce a 44-character
 Base64 encoding is used to ensure that the key can be represented as a secure ASCII string for storage and transmission.
 """
 
+# message_codecs/key_manager.py
 from cryptography.fernet import Fernet
+from tests.logger import Logger
 import os
 import base64
 
 class KeyManager:
+    logger = Logger().get_logger()
     key = None
 
     @staticmethod
     def get_key_path():
         script_dir = os.path.dirname(__file__)
-        return os.path.join(script_dir, '.credentials')
+        return os.path.join(script_dir, 'crypto.key')
 
     @staticmethod
     def load_key():
@@ -24,10 +27,10 @@ class KeyManager:
             with open(key_path, 'rb') as f:
                 KeyManager.key = f.read()
                 if not KeyManager.key:
-                    print(f"Key file {key_path} is empty, generating new key.")
+                    KeyManager.logger.debug(f"Key file {key_path} is empty, generating new key.")
                     KeyManager.generate_key()
                 else:
-                    print(f"Key loaded from {key_path}")
+                    KeyManager.logger.debug(f"Key loaded from {key_path}")
         else:
             KeyManager.generate_key()
 
@@ -36,13 +39,13 @@ class KeyManager:
         key_path = KeyManager.get_key_path()
         with open(key_path, 'wb') as f:
             f.write(KeyManager.key)
-        print(f"Key saved to {key_path}")
+        KeyManager.logger.debug(f"Key saved to {key_path}")
 
     @staticmethod
     def generate_key():
         KeyManager.key = Fernet.generate_key()
         KeyManager.save_key()
-        print("New key generated")
+        KeyManager.logger.debug("New key generated")
 
     @staticmethod
     def get_raw_key():
