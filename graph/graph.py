@@ -3,12 +3,18 @@ from tests.logger import Logger
 import webbrowser
 import os
 
+"""
+Classe geradora de gráficos.
+"""
 class Graph:
     logger = Logger().get_logger()
 
+    """
+    Gera um gráfico do sinal 2B1Q.
+    """
     @staticmethod
     def create_graph(data, title, filename):
-        # Map signal values to y-axis positions
+        # Mapeia os valores de tensão para posições no gráfico
         y_positions = {-3: 0, -1: 2, 1: 4, 3: 6}
         y = [y_positions[value] for value in data]
 
@@ -23,5 +29,5 @@ class Graph:
         Graph.logger.info(f"Graph saved as {filename}")
         plt.close()
 
-        # Open the SVG file in the default web browser
+        # Abre o arquivo .svg no navegador padrão
         webbrowser.open(f'file://{os.path.abspath(filename)}')
