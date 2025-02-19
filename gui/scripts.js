@@ -40,7 +40,6 @@ function prepareAndSendMessage() {
         displayMessage(message, 'sent', response);
         const preparedSignal = response.encoded_message;
         pywebview.api.send_signal(preparedSignal, host, port).then(sendResponse => {
-            alert(sendResponse);
             isSending = false;
         }).catch(() => {
             isSending = false;
@@ -79,6 +78,9 @@ function displayMessage(message, type, details) {
     messageElement.appendChild(content);
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+    if (type === 'received') {
+        alert(`Received message: ${message}`);
+    }
     reloadSVG(); // Update the graph when a new message is displayed
 }
 
@@ -118,7 +120,7 @@ function pollReceivedMessage() {
     }).catch(error => {
         console.error('Error fetching received message:', error);
     }).finally(() => {
-        setTimeout(pollReceivedMessage, 1000); // Poll every second
+        setTimeout(pollReceivedMessage, 3000);
     });
 }
 

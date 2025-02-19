@@ -29,8 +29,8 @@ class MessageReceiver:
         except ConnectionResetError:
             MessageReceiver.logger.error("Connection was reset by the remote host")
 
-        MessageReceiver.logger.info(f"Received data: {data}")
         MessageReceiver.signal = [byte - 128 for byte in data]  # Map byte values back to voltage values
+        MessageReceiver.logger.info(f"Received data: {MessageReceiver.signal}")
         Graph.create_graph(MessageReceiver.signal, "Received 2B1Q Signal", "../gui/received_signal.svg")
         encrypted_message = LineCode2B1Q.decode_2b1q(MessageReceiver.signal)
         MessageReceiver.encrypted_message = [int(bit) for bit in encrypted_message]  # Convert string to list of integers

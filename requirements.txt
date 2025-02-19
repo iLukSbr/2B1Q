@@ -1,10 +1,7 @@
 colorlog
 cryptography
-ipython
 matplotlib
 netifaces
-plotly
 pywebview
 watchdog
 websockets
-zeroconf
