@@ -12,8 +12,9 @@ def get_local_ip():
     for interface in interfaces:
         addresses = netifaces.ifaddresses(interface)
         if netifaces.AF_INET in addresses:
-            ipv4_info = addresses[netifaces.AF_INET][0]
-            return ipv4_info['addr']
+            # ipv4_info = addresses[netifaces.AF_INET][0]
+            return '10.181.2.241'
+            # return ipv4_info['addr']
     return None
 
 async def websocket_handler(websocket, path, app_instance):
