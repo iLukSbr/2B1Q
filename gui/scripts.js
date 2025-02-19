@@ -1,4 +1,11 @@
 let isSending = false;
+const ws = new WebSocket('ws://localhost:6789');
+
+ws.onmessage = function(event) {
+    const message = JSON.parse(event.data);
+    displayMessage(message.message, 'received', message);
+    reloadSVG(); // Update the graph when a new message is received
+};
 
 function prepareAndSendMessage() {
     const hostInput = document.getElementById('hostInput');
@@ -33,7 +40,6 @@ function prepareAndSendMessage() {
         const preparedSignal = response.encoded_message;
         pywebview.api.send_signal(preparedSignal, host, port).then(sendResponse => {
             alert(sendResponse);
-            reloadSVG();
             isSending = false;
         }).catch(() => {
             isSending = false;
@@ -41,20 +47,8 @@ function prepareAndSendMessage() {
     }).catch(() => {
         isSending = false;
     });
-}
 
-function receiveMessage() {
-    const host = document.getElementById('hostInput').value;
-    const port = document.getElementById('portInput').value;
-
-    if (!host || !port) {
-        return;
-    }
-
-    pywebview.api.receive_message(host, port).then(response => {
-        displayMessage(response.message, 'received', response);
-        plotGraph(response.encoded_message, 'Received Signal');
-    });
+    reloadSVG();
 }
 
 function displayMessage(message, type, details) {
@@ -64,7 +58,7 @@ function displayMessage(message, type, details) {
 
     const photo = document.createElement('img');
     photo.classList.add('photo');
-    photo.src = type === 'sent' ? 'path/to/os/logo.png' : 'path/to/other/os/logo.png';
+    photo.src = 'square_wave.ico';
 
     const content = document.createElement('div');
     content.classList.add('content');
@@ -83,7 +77,7 @@ function displayMessage(message, type, details) {
     messageElement.appendChild(content);
     chatMessages.appendChild(messageElement);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    reloadSVG();
+    reloadSVG(); // Update the graph when a new message is displayed
 }
 
 pywebview.api.get_ip().then(response => {
@@ -97,10 +91,12 @@ pywebview.api.get_ip().then(response => {
 });
 
 function reloadSVG() {
-    const graph = document.getElementById('graph');
-    const newGraph = document.createElement('img');
-    newGraph.src = '../graph/signal.svg?' + new Date().getTime(); // Add timestamp to force reload
-    newGraph.alt = '2B1Q Signal Graph';
-    newGraph.id = 'graph';
-    graph.parentNode.replaceChild(newGraph, graph);
+    setTimeout(() => {
+        const graph = document.getElementById('graph');
+        const newGraph = document.createElement('img');
+        newGraph.src = 'signal.svg?' + new Date().getTime(); // Add timestamp to force reload
+        newGraph.alt = '2B1Q Signal Graph';
+        newGraph.id = 'graph';
+        graph.parentNode.replaceChild(newGraph, graph);
+    }, 1000); // Delay of 1 second
 }

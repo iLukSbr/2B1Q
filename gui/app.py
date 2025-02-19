@@ -21,5 +21,5 @@ class App:
     def run(self):
         script_dir = os.path.dirname(__file__)
         index_path = os.path.join(script_dir, 'index.html')
-        window = webview.create_window('Team Data Pulse - 2B1Q', index_path, width=1200, height=800, js_api=self)
+        window = webview.create_window('Team Data Pulse - 2B1Q', index_path, width=1300, height=600, js_api=self)
         webview.start()
