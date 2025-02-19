@@ -10,7 +10,7 @@ When the 2B signal is used, ts voltage is flipped to positive or negative polari
 
 This project implements the 2B1Q algorithm, both receiver and sender with GUI and signal graph visualization.
 
-Data is crypto-secured with a XOR cipher.  
+Data is crypto-secured using a XOR cipher.  
 
 ---  
 
