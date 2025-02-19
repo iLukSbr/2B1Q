@@ -1,7 +1,6 @@
 """
-Algoritmo de codificação de linha 2B1Q.
+Algoritmo de codificação de linha 2B1Q, extraído de um repositório do GitHub, com algumas modificações.
 """
-
 class LineCode2B1Q:
     # Função auxiliar para mapear pares de bits para sinais e vice-versa
     @staticmethod

@@ -1,25 +1,30 @@
-"""
-Fermat uses a cryptographically secure random number generator to generate 32 bytes of random data.
-This is done using the os.urandom function or an equivalent function that provides secure random bytes.
-The 32 bytes of random data are then encoded in base64 to produce a 44-character string.
-Base64 encoding is used to ensure that the key can be represented as a secure ASCII string for storage and transmission.
-"""
-
-# message_codecs/key_manager.py
 from cryptography.fernet import Fernet
 from tests.logger import Logger
 import os
 import base64
 
+"""
+Fermat usa um gerador de números aleatórios criptograficamente seguro para gerar 32 bytes de dados aleatórios.
+Isso é feito usando a função os.urandom ou uma função equivalente que fornece bytes aleatórios seguros.
+Os 32 bytes de dados aleatórios são então codificados em base64 para produzir uma string de 44 caracteres.
+A codificação Base64 é usada para garantir que a chave possa ser representada como uma string ASCII segura para armazenamento e transmissão.
+Código retirado do repositório de criptografia do Python.
+"""
 class KeyManager:
     logger = Logger().get_logger()
     key = None
 
+    """
+    Obtém o caminho do arquivo crypto.key da chave.
+    """
     @staticmethod
     def get_key_path():
         script_dir = os.path.dirname(__file__)
         return os.path.join(script_dir, 'crypto.key')
 
+    """
+    Carrega o arquivo da chave se existir, caso contrário, gera uma nova chave.
+    """
     @staticmethod
     def load_key():
         key_path = KeyManager.get_key_path()
@@ -34,6 +39,9 @@ class KeyManager:
         else:
             KeyManager.generate_key()
 
+    """
+    Salva a chave no arquivo crypto.key.
+    """
     @staticmethod
     def save_key():
         key_path = KeyManager.get_key_path()
@@ -41,6 +49,9 @@ class KeyManager:
             f.write(KeyManager.key)
         KeyManager.logger.info(f"Key saved to {key_path}")
 
+    """
+    Gera uma nova chave e a salva no arquivo crypto.key.
+    """
     @staticmethod
     def generate_key():
         KeyManager.key = Fernet.generate_key()

@@ -1,20 +1,23 @@
-import socket
-import configparser
-import os
 from message_codecs import *
 from tests import Logger
 from graph import Graph
 import tkinter as tk
 from tkinter import messagebox
 
+"""
+Esta classe utiliza as funções de decodificação e descriptografia  do message_codecs para receber mensagens.
+"""
 class MessageReceiver:
     logger = Logger().get_logger()
     message = None
     decoded_message = None
     encrypted_message = None
     signal = None
-    test_slides = True
+    test_slides = False
 
+    """
+    Esta função recebe uma conexão e lê os dados recebidos em 3 tentativas.
+    """
     @staticmethod
     def receive_message(conn):
         data = b''
@@ -64,6 +67,9 @@ class MessageReceiver:
             "encoded_message": MessageReceiver.message
         }
 
+    """
+    Obtém a mensagem recebida por último do buffer.
+    """
     @staticmethod
     def get_message_received():
         return {
@@ -74,6 +80,9 @@ class MessageReceiver:
             "encoded_message": MessageReceiver.message
         }
 
+    """
+    Mostra uma janela de aviso com a mensagem recebida.
+    """
     @staticmethod
     def show_message_received():
         message = MessageReceiver.get_message_received()
