@@ -31,7 +31,8 @@ class MessageReceiver:
                     data += chunk
         except ConnectionResetError:
             MessageReceiver.logger.error("Connection was reset by the remote host")
-            MessageReceiver.signal = [byte - 128 for byte in data]
+
+        MessageReceiver.signal = [byte - 128 for byte in data]
 
         if not MessageReceiver.test_slides:
               # Map byte values back to voltage values
