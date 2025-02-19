@@ -100,13 +100,27 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     padding: 20px;
-    height: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: auto; /* Allow the container to expand based on content */
 }
 
-#graph {
+#graph-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+#graph_sent {
+    width: 100%;
+    height: 100%;
+}
+
+#graph_recv {
     width: 100%;
     height: 100%;
 }
@@ -115,6 +129,22 @@ body {
     display: flex;
     align-items: flex-start;
     margin-bottom: 15px;
+    flex-wrap: wrap; /* Allow the message to wrap */
+}
+
+.message .content {
+    padding: 10px;
+    max-width: 100%; /* Allow the content to expand fully */
+    word-wrap: break-word; /* Ensure long words break to fit */
+    display: flex;
+    flex-direction: column;
+}
+
+.message .photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
 }
 
 .message.sent .content {
@@ -129,20 +159,15 @@ body {
     border-radius: 12px 12px 12px 0;
 }
 
-.message .photo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.message .content {
-    padding: 10px;
-    max-width: 70%;
-}
-
 .message .details {
     margin-top: 10px;
     font-size: 0.9em;
     color: #ccc;
+}
+
+.message .content img {
+    max-width: 100%; /* Ensure images fit within the content */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 12px; /* Optional: add border radius to images */
+    margin-top: 10px; /* Optional: add margin to separate images from text */
 }

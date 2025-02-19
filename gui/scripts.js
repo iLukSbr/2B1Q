@@ -95,12 +95,18 @@ function displayMessage(message, type, details) {
 
 function reloadSVG() {
     setTimeout(() => {
-        const graph = document.getElementById('graph');
+        const graph = document.getElementById('graph_recv');
         const newGraph = document.createElement('img');
-        newGraph.src = 'signal.svg?' + new Date().getTime(); // Add timestamp to force reload
-        newGraph.alt = '2B1Q Signal Graph';
+        newGraph.src = 'received_signal.svg?' + new Date().getTime(); // Add timestamp to force reload
+        newGraph.alt = '2B1Q Received Signal Graph';
         newGraph.id = 'graph';
         graph.parentNode.replaceChild(newGraph, graph);
+        const graph2 = document.getElementById('graph_sent');
+        const newGraph2 = document.createElement('img');
+        newGraph2.src = 'sent_signal.svg?' + new Date().getTime(); // Add timestamp to force reload
+        newGraph2.alt = '2B1Q Sent Signal Graph';
+        newGraph2.id = 'graph';
+        graph2.parentNode.replaceChild(newGraph2, graph2);
     }, 1000); // Delay of 1 second
 }
 
