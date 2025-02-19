@@ -1,8 +1,8 @@
+colorlog
 cryptography
-flask
-flask-vite
 ipython
-numpy
+matplotlib
 plotly
 pywebview
+watchdog
 zeroconf

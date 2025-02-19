@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Pulse 2B1Q</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="square_wave.ico">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="scripts.js" defer></script> <!-- Reference the JavaScript file -->
-</head>
-<body>
-    <h1>Data Pulse 2B1Q</h1>
-    <div class="container">
-        <div class="box">
-            <textarea id="messageInput" placeholder="Type your message here..." required></textarea>
-            <button onclick="prepareAndSendMessage()"><i class="fa fa-paper-plane"></i> Send</button>
-            <div id="senderDetails"></div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Data Pulse 2B1Q Chat</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link rel="stylesheet" href="styles.css">
+        <link rel="icon" href="square_wave.ico">
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="scripts.js" defer></script>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 d-flex flex-column">
+                    <div class="server mb-3">
+                        <input type="text" id="hostInput" class="form-control mb-2" placeholder="Host" required>
+                        <input type="number" id="portInput" class="form-control" placeholder="Port" required>
+                    </div>
+                    <div class="chat-box flex-grow-1">
+                        <div id="chatMessages" class="chat-messages"></div>
+                        <div class="input-group mt-3">
+                            <textarea id="messageInput" class="form-control" placeholder="Type your message here..." required></textarea>
+                            <div class="input-group-append">
+                                <button class="btn" onclick="prepareAndSendMessage()"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div id="graph-container">
+                        <img src="../graph/signal.svg?timestamp=<%= new Date().getTime() %>" alt="2B1Q Signal Graph" id="graph">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="box">
-            <h2>Received Messages</h2>
-            <div id="receivedMessages"></div>
-            <div id="receiverDetails"></div>
-        </div>
-    </div>
-    <div id="graph"></div> <!-- Add this div for the graph -->
-</body>
+    </body>
 </html>

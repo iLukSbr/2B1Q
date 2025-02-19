@@ -27,10 +27,10 @@ class KeyManager:
             with open(key_path, 'rb') as f:
                 KeyManager.key = f.read()
                 if not KeyManager.key:
-                    KeyManager.logger.debug(f"Key file {key_path} is empty, generating new key.")
+                    KeyManager.logger.info(f"Key file {key_path} is empty, generating new key.")
                     KeyManager.generate_key()
                 else:
-                    KeyManager.logger.debug(f"Key loaded from {key_path}")
+                    KeyManager.logger.info(f"Key loaded from {key_path}")
         else:
             KeyManager.generate_key()
 
@@ -39,13 +39,13 @@ class KeyManager:
         key_path = KeyManager.get_key_path()
         with open(key_path, 'wb') as f:
             f.write(KeyManager.key)
-        KeyManager.logger.debug(f"Key saved to {key_path}")
+        KeyManager.logger.info(f"Key saved to {key_path}")
 
     @staticmethod
     def generate_key():
         KeyManager.key = Fernet.generate_key()
         KeyManager.save_key()
-        KeyManager.logger.debug("New key generated")
+        KeyManager.logger.info("New key generated")
 
     @staticmethod
     def get_raw_key():

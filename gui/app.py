@@ -1,28 +1,25 @@
 import webview
-import os  # Add this import
+import os
+import socket
+from transmission import MessageSender, MessageReceiver
 
 class App:
-    def send_message(self, message):
-        from transmission.sender import MessageSender  # Move import here to avoid circular import
+    def prepare_message(self, message):
+        return MessageSender.prepare_message(message)
 
-        return MessageSender.send_message(message)
+    def send_signal(self, signal, host, port):
+        return MessageSender.send_signal(signal, host, port)
 
-    def send_signal(self, signal):
-        from transmission.sender import MessageSender  # Move import here to avoid circular import
+    def receive_message(self, conn):
+        return MessageReceiver.receive_message(conn)
 
-        return MessageSender.send_signal(signal)
+    def get_ip(self):
+        hostname = socket.gethostname()
+        ip_address = socket.gethostbyname(hostname)
+        return {"ip": ip_address, "hostname": hostname}
 
-    def receive_message(self):
-        from transmission.receiver import MessageReceiver  # Move import here to avoid circular import
-
-        return MessageReceiver.receive_message()
-
-def main():
-    app = App()
-    script_dir = os.path.dirname(__file__)
-    index_path = os.path.join(script_dir, 'index.html')
-    window = webview.create_window('Data Pulse 2B1Q', index_path, width=1920, height=1080, js_api=app)
-    webview.start()
-
-if __name__ == '__main__':
-    main()
+    def run(self):
+        script_dir = os.path.dirname(__file__)
+        index_path = os.path.join(script_dir, 'index.html')
+        window = webview.create_window('Team Data Pulse - 2B1Q', index_path, width=1200, height=800, js_api=self)
+        webview.start()

@@ -1,66 +1,106 @@
 let isSending = false;
 
 function prepareAndSendMessage() {
-    if (isSending) return; // Prevent multiple submissions
+    const hostInput = document.getElementById('hostInput');
+    const portInput = document.getElementById('portInput');
+
+    if (!hostInput.value) {
+        alert('Host is required');
+        hostInput.focus();
+        return;
+    }
+
+    if (!portInput.value) {
+        alert('Port is required');
+        portInput.focus();
+        return;
+    }
+
+    if (isSending) return;
     isSending = true;
 
     const message = document.getElementById('messageInput').value;
-    if (!message) {
+    const host = document.getElementById('hostInput').value;
+    const port = document.getElementById('portInput').value;
+
+    if (!message || !host || !port) {
         isSending = false;
         return;
     }
 
-    pywebview.api.send_message(message).then(response => {
-        const senderDetails = document.getElementById('senderDetails');
-        if (senderDetails) {
-            senderDetails.innerHTML = `
-                <p>Raw Message: ${response.raw_message}</p>
-                <p>Binary Message: ${response.binary_message}</p>
-                <p>Encrypted Message: ${response.encrypted_message}</p>
-                <p>2B1Q Encoded Message: ${response.encoded_message}</p>
-            `;
-        }
+    pywebview.api.prepare_message(message).then(response => {
+        displayMessage(message, 'sent', response);
         const preparedSignal = response.encoded_message;
-        pywebview.api.send_signal(preparedSignal).then(sendResponse => {
+        pywebview.api.send_signal(preparedSignal, host, port).then(sendResponse => {
             alert(sendResponse);
-            isSending = false; // Reset the flag after sending
+            reloadSVG();
+            isSending = false;
         }).catch(() => {
-            isSending = false; // Reset the flag in case of error
+            isSending = false;
         });
     }).catch(() => {
-        isSending = false; // Reset the flag in case of error
+        isSending = false;
     });
 }
 
 function receiveMessage() {
-    pywebview.api.receive_message().then(response => {
-        const receivedMessages = document.getElementById('receivedMessages');
-        if (receivedMessages) {
-            const messageElement = document.createElement('p');
-            messageElement.textContent = response.message;
-            receivedMessages.appendChild(messageElement);
-        }
+    const host = document.getElementById('hostInput').value;
+    const port = document.getElementById('portInput').value;
 
-        const receiverDetails = document.getElementById('receiverDetails');
-        if (receiverDetails) {
-            receiverDetails.innerHTML = `
-                <p>Raw Message: ${response.raw_message}</p>
-                <p>Binary Message: ${response.binary_message}</p>
-                <p>Encrypted Message: ${response.encrypted_message}</p>
-                <p>2B1Q Encoded Message: ${response.encoded_message}</p>
-            `;
-        }
+    if (!host || !port) {
+        return;
+    }
+
+    pywebview.api.receive_message(host, port).then(response => {
+        displayMessage(response.message, 'received', response);
+        plotGraph(response.encoded_message, 'Received Signal');
     });
 }
 
-function plotGraph() {
-    const trace1 = {
-        x: [1, 2, 3, 4, 5],
-        y: [10, 15, 13, 17, 21],
-        type: 'scatter'
-    };
-    const data = [trace1];
-    Plotly.newPlot('graph', data); // Render the graph in the div with id="graph"
+function displayMessage(message, type, details) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', type);
+
+    const photo = document.createElement('img');
+    photo.classList.add('photo');
+    photo.src = type === 'sent' ? 'path/to/os/logo.png' : 'path/to/other/os/logo.png';
+
+    const content = document.createElement('div');
+    content.classList.add('content');
+    content.innerHTML = `
+        <p class="message-title">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
+        <p>${message}</p>
+        <div class="details">
+            <p>Raw Message: ${details.raw_message}</p>
+            <p>Binary Message: ${details.binary_message}</p>
+            <p>Encrypted Message: ${details.encrypted_message}</p>
+            <p>2B1Q Encoded Message: ${details.encoded_message}</p>
+        </div>
+    `;
+
+    messageElement.appendChild(photo);
+    messageElement.appendChild(content);
+    chatMessages.appendChild(messageElement);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    reloadSVG();
 }
 
-plotGraph();
+pywebview.api.get_ip().then(response => {
+    const chatMessages = document.getElementById('chatMessages');
+    const ipElement = document.createElement('div');
+    ipElement.classList.add('message', 'received');
+    ipElement.innerHTML = `
+        <p><strong>${response.hostname}</strong> (${response.ip})</p>
+    `;
+    chatMessages.appendChild(ipElement);
+});
+
+function reloadSVG() {
+    const graph = document.getElementById('graph');
+    const newGraph = document.createElement('img');
+    newGraph.src = '../graph/signal.svg?' + new Date().getTime(); // Add timestamp to force reload
+    newGraph.alt = '2B1Q Signal Graph';
+    newGraph.id = 'graph';
+    graph.parentNode.replaceChild(newGraph, graph);
+}

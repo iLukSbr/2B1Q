@@ -3,40 +3,23 @@ import configparser
 import os
 import time
 from message_codecs import *
-from tests.logger import Logger  # Import the custom logger
-
-# Instantiate the logger
-logger = Logger().get_logger()
+from tests import Logger
+from graph import Graph
 
 class MessageSender:
-    state_duration = 100  # milliseconds
+    logger = Logger().get_logger()
+    state_duration = 1 # microseconds
 
     @staticmethod
-    def send_message(message):
-        from gui.graph import Graph  # Move import here to avoid circular import
-
-        config = configparser.ConfigParser()
-        script_dir = os.path.dirname(__file__)
-        config_path = os.path.join(script_dir, 'config.ini')
-
-        if not os.path.exists(config_path):
-            raise FileNotFoundError(f"Config file not found: {config_path}")
-
-        config.read(config_path)
-
-        if 'server' not in config:
-            raise KeyError("The 'server' section is missing in the config file.")
-
-        host = config['server']['host']
-        port = int(config['server']['port'])
-
-        logger.info(f"Message to send: {message}")
+    def prepare_message(message):
+        MessageSender.logger.info(f"Message to send: {message}")
         binary_message = BinaryConverter.utf8_to_binary(message)
-        logger.debug(f"Binary message: {binary_message}")
+        MessageSender.logger.info(f"Binary message: {binary_message}")
         encrypted_message = XORCipher.encrypt(binary_message)
-        logger.debug(f"Encrypted message: {encrypted_message}")
+        MessageSender.logger.info(f"Encrypted message: {encrypted_message}")
         signal = LineCode2B1Q.apply_2b1q(encrypted_message)
-        logger.debug(f"Signal: {signal}")
+        MessageSender.logger.info(f"Signal: {signal}")
+        Graph.create_graph(signal, "Sent 2B1Q signal", "../graph/signal.svg")
 
         # Return the details as a JSON object
         return {
@@ -48,25 +31,11 @@ class MessageSender:
         }
 
     @staticmethod
-    def send_signal(signal):
-        config = configparser.ConfigParser()
-        script_dir = os.path.dirname(__file__)
-        config_path = os.path.join(script_dir, 'config.ini')
-
-        if not os.path.exists(config_path):
-            raise FileNotFoundError(f"Config file not found: {config_path}")
-
-        config.read(config_path)
-
-        if 'server' not in config:
-            raise KeyError("The 'server' section is missing in the config file.")
-
-        host = config['server']['host']
-        port = int(config['server']['port'])
-
+    def send_signal(signal, host, port):
+        port = int(port)
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((host, port))
             for value in signal:
                 s.sendall(bytes([int(value) + 128]))
-                logger.debug(f"Sent value: {value}")
-                time.sleep(MessageSender.state_duration / 1000)  # Send each value with delay
+                MessageSender.logger.info(f"Sent value: {value}")
+                time.sleep(MessageSender.state_duration / 1000000)

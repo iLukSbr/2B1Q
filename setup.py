@@ -9,17 +9,13 @@ setup(
     package_dir={"": "src"},
     entry_points={
         "console_scripts": [
-            "2b1q-send=sender:send_message",
-            "2b1q-receive=receiver:receive_message",
+            "2b1q = main:main"
         ],
     },
-    install_requires=[
-        "cryptography",
-        "matplotlib",
-    ],
+    install_requires=open("requirements.txt").read().splitlines(),
     author="Data Pulse",
     author_email="lucasyfm@hotmail.com",
-    description="Projeto de envio/recebimento de código 2B1Q criptografado",
+    description="Projeto de envio/recebimento de código 2B1Q criptografado.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/iLukSbr/2B1Q",
