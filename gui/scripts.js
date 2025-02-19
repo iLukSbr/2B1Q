@@ -84,32 +84,20 @@ function displayMessage(message, type, details) {
     reloadSVG(); // Update the graph when a new message is displayed
 }
 
-// pywebview.api.get_ip().then(response => {
-//     ipAddress = response;
-//     const chatMessages = document.getElementById('chatMessages');
-//     const ipElement = document.createElement('div');
-//     ipElement.classList.add('message', 'received');
-//     ipElement.innerHTML = `
-//         <p><strong>${response.hostname}</strong> (${response})</p>
-//     `;
-//     chatMessages.appendChild(ipElement);
-// });
-
 function reloadSVG() {
-    setTimeout(() => {
-        const graph = document.getElementById('graph_recv');
-        const newGraph = document.createElement('img');
-        newGraph.src = 'received_signal.svg?' + new Date().getTime(); // Add timestamp to force reload
-        newGraph.alt = '2B1Q Received Signal Graph';
-        newGraph.id = 'graph';
-        graph.parentNode.replaceChild(newGraph, graph);
-        const graph2 = document.getElementById('graph_sent');
-        const newGraph2 = document.createElement('img');
-        newGraph2.src = 'sent_signal.svg?' + new Date().getTime(); // Add timestamp to force reload
-        newGraph2.alt = '2B1Q Sent Signal Graph';
-        newGraph2.id = 'graph';
-        graph2.parentNode.replaceChild(newGraph2, graph2);
-    }, 1000); // Delay of 1 second
+    const graphRecv = document.getElementById('graph_recv');
+    const newGraphRecv = document.createElement('img');
+    newGraphRecv.src = 'received_signal.svg?' + new Date().getTime(); // Add timestamp to force reload
+    newGraphRecv.alt = '2B1Q Received Signal Graph';
+    newGraphRecv.id = 'graph_recv';
+    graphRecv.parentNode.replaceChild(newGraphRecv, graphRecv);
+
+    const graphSent = document.getElementById('graph_sent');
+    const newGraphSent = document.createElement('img');
+    newGraphSent.src = 'sent_signal.svg?' + new Date().getTime(); // Add timestamp to force reload
+    newGraphSent.alt = '2B1Q Sent Signal Graph';
+    newGraphSent.id = 'graph_sent';
+    graphSent.parentNode.replaceChild(newGraphSent, graphSent);
 }
 
 function pollReceivedMessage() {
@@ -124,4 +112,10 @@ function pollReceivedMessage() {
     });
 }
 
+function pollGraphFiles() {
+    reloadSVG();
+    setTimeout(pollGraphFiles, 3000); // Poll every 3 seconds
+}
+
 pollReceivedMessage();
+pollGraphFiles();

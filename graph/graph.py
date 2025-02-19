@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 from tests.logger import Logger
+import webbrowser
+import os
 
 class Graph:
     logger = Logger().get_logger()
@@ -20,3 +22,6 @@ class Graph:
         plt.savefig(filename, format='svg')
         Graph.logger.info(f"Graph saved as {filename}")
         plt.close()
+
+        # Open the SVG file in the default web browser
+        webbrowser.open(f'file://{os.path.abspath(filename)}')

@@ -3,5 +3,7 @@ cryptography
 matplotlib
 netifaces
 pywebview
+pyqt5
+tk
 watchdog
 websockets

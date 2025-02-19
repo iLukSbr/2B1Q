@@ -19,7 +19,7 @@ class MessageSender:
         MessageSender.logger.info(f"Encrypted message: {encrypted_message}")
         signal = LineCode2B1Q.apply_2b1q(encrypted_message)
         MessageSender.logger.info(f"Signal: {signal}")
-        Graph.create_graph(signal, "Sent 2B1Q signal", "../gui/sent_signal.svg")
+        Graph.create_graph(signal, "Sent 2B1Q signal", "gui/sent_signal.svg")
 
         # Return the details as a JSON object
         return {

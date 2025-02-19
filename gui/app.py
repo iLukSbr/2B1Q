@@ -18,6 +18,7 @@ class App:
         if message:
             self.set_received_message(message)
             asyncio.run(self.delay_message_processing())
+            MessageReceiver.show_message_received()
         return message
 
     async def delay_message_processing(self):
