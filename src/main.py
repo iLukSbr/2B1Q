@@ -1,9 +1,20 @@
 import asyncio
+import configparser
 import websockets
 import json
+import netifaces
 import socket
 import threading
 from gui import App
+
+def get_local_ip():
+    interfaces = netifaces.interfaces()
+    for interface in interfaces:
+        addresses = netifaces.ifaddresses(interface)
+        if netifaces.AF_INET in addresses:
+            ipv4_info = addresses[netifaces.AF_INET][0]
+            return ipv4_info['addr']
+    return None
 
 async def websocket_handler(websocket, path, app_instance):
     while True:
@@ -14,8 +25,10 @@ async def websocket_handler(websocket, path, app_instance):
         await asyncio.sleep(1)
 
 def start_server(app_instance):
-    host = 'localhost'
-    port = 12345
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    host = get_local_ip()
+    port = int(config['server']['port'])
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))

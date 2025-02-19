@@ -1,5 +1,6 @@
 let isSending = false;
 const ws = new WebSocket('ws://localhost:6789');
+let ipAddress = '';
 
 ws.onmessage = function(event) {
     const message = JSON.parse(event.data);
@@ -62,6 +63,7 @@ function displayMessage(message, type, details) {
 
     const content = document.createElement('div');
     content.classList.add('content');
+
     content.innerHTML = `
         <p class="message-title">${type.charAt(0).toUpperCase() + type.slice(1)}</p>
         <p>${message}</p>
@@ -80,15 +82,16 @@ function displayMessage(message, type, details) {
     reloadSVG(); // Update the graph when a new message is displayed
 }
 
-pywebview.api.get_ip().then(response => {
-    const chatMessages = document.getElementById('chatMessages');
-    const ipElement = document.createElement('div');
-    ipElement.classList.add('message', 'received');
-    ipElement.innerHTML = `
-        <p><strong>${response.hostname}</strong> (${response.ip})</p>
-    `;
-    chatMessages.appendChild(ipElement);
-});
+// pywebview.api.get_ip().then(response => {
+//     ipAddress = response;
+//     const chatMessages = document.getElementById('chatMessages');
+//     const ipElement = document.createElement('div');
+//     ipElement.classList.add('message', 'received');
+//     ipElement.innerHTML = `
+//         <p><strong>${response.hostname}</strong> (${response})</p>
+//     `;
+//     chatMessages.appendChild(ipElement);
+// });
 
 function reloadSVG() {
     setTimeout(() => {
@@ -100,3 +103,17 @@ function reloadSVG() {
         graph.parentNode.replaceChild(newGraph, graph);
     }, 1000); // Delay of 1 second
 }
+
+function pollReceivedMessage() {
+    pywebview.api.get_received_message().then(response => {
+        if (response.message) {
+            displayMessage(response.message, 'received', response);
+        }
+    }).catch(error => {
+        console.error('Error fetching received message:', error);
+    }).finally(() => {
+        setTimeout(pollReceivedMessage, 1000); // Poll every second
+    });
+}
+
+pollReceivedMessage();

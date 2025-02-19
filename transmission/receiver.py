@@ -7,6 +7,10 @@ from graph import Graph
 
 class MessageReceiver:
     logger = Logger().get_logger()
+    message = None
+    decoded_message = None
+    encrypted_message = None
+    signal = None
 
     @staticmethod
     def receive_message(conn):
@@ -37,6 +41,16 @@ class MessageReceiver:
         MessageReceiver.logger.info(f"Message: {MessageReceiver.message}")
 
         # Return the details as a JSON object
+        return {
+            "message": MessageReceiver.message,
+            "raw_message": MessageReceiver.decoded_message,
+            "binary_message": MessageReceiver.encrypted_message,
+            "encrypted_message": MessageReceiver.signal,
+            "encoded_message": MessageReceiver.message
+        }
+
+    @staticmethod
+    def get_message_received():
         return {
             "message": MessageReceiver.message,
             "raw_message": MessageReceiver.decoded_message,
