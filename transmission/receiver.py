@@ -31,9 +31,10 @@ class MessageReceiver:
                     data += chunk
         except ConnectionResetError:
             MessageReceiver.logger.error("Connection was reset by the remote host")
+            MessageReceiver.signal = [byte - 128 for byte in data]
 
         if not MessageReceiver.test_slides:
-            MessageReceiver.signal = [byte - 128 for byte in data]  # Map byte values back to voltage values
+              # Map byte values back to voltage values
             MessageReceiver.logger.info(f"Received data: {MessageReceiver.signal}")
             encrypted_message = LineCode2B1Q.decode_2b1q(MessageReceiver.signal)
             MessageReceiver.encrypted_message = [int(bit) for bit in encrypted_message]  # Convert string to list of integers
@@ -44,7 +45,7 @@ class MessageReceiver:
             MessageReceiver.logger.info(f"Message: {MessageReceiver.message}")
 
         else:
-            MessageReceiver.logger.info(f"Received data: {data}")
+            MessageReceiver.logger.info(f"Received data: {MessageReceiver.signal}")
             MessageReceiver.encrypted_message = LineCode2B1Q.decode_2b1q(MessageReceiver.signal)
             MessageReceiver.logger.info(f"Encrypted message: {MessageReceiver.encrypted_message}")
             MessageReceiver.decoded_message = MessageReceiver.encrypted_message
