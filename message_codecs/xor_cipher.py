@@ -1,14 +1,17 @@
-"""
-The XOR cipher uses a key to encrypt and decrypt a message.
-The operation results in 1 if the bits of the message and the key are different and 0 if they are the same.
-The key is repeated or trimmed so that it has the same size as the message.
-"""
-
 from message_codecs import KeyManager
 
+"""
+A cifra XOR usa uma chave para criptografar e descriptografar uma mensagem.
+A operação resulta em 1 se os bits da mensagem e da chave são diferentes e 0 se forem iguais.
+A chave é repetida ou aparada para que tenha o mesmo tamanho da mensagem.
+Retirado da biblioteca de cifras do Python.
+"""
 class XORCipher:
     key = None
 
+    """
+    Inicializa a chave se não houver.
+    """
     @staticmethod
     def initialize_key():
         if XORCipher.key is None:
@@ -16,6 +19,9 @@ class XORCipher:
             if not XORCipher.key:
                 raise ValueError("Failed to initialize the key.")
 
+    """
+    Criptografa uma mensagem usando a cifra XOR.
+    """
     @staticmethod
     def encrypt(bit_array):
         XORCipher.initialize_key()
@@ -24,6 +30,9 @@ class XORCipher:
             encrypted_bits.append(bit_array[i] ^ XORCipher.key[i % len(XORCipher.key)])
         return encrypted_bits
 
+    """
+    Descriptografa uma mensagem usando a cifra XOR.
+    """
     @staticmethod
     def decrypt(bit_array):
         XORCipher.initialize_key()

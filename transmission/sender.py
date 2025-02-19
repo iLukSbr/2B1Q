@@ -6,11 +6,17 @@ from message_codecs import *
 from tests import Logger
 from graph import Graph
 
+"""
+Classe que envia mensagens para o servidor.
+"""
 class MessageSender:
     logger = Logger().get_logger()
     state_duration = 1 # microseconds
-    test_slides = True
+    test_slides = False
 
+    """
+    Transforma a mensagem em binário, depois em 
+    """
     @staticmethod
     def prepare_message(message):
         if not MessageSender.test_slides:
