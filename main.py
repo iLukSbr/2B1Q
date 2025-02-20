@@ -85,7 +85,7 @@ async def start_websocket_server(app_instance):
     config = read_config()
     host = config['gui_server']['host']
     port = int(config['gui_server']['port'])
-    logger.info(f"Starting graphical user interface on {host}:{port}")
+    # logger.info(f"Starting graphical user interface on {host}:{port}")
     start_server = websockets.serve(lambda ws, path: websocket_handler(ws, path, app_instance), host, port)
     await start_server
 
