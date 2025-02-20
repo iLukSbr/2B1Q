@@ -95,7 +95,7 @@ body {
 }
 
 .input-group button:hover {
-    background-color: #1ebe5d;
+    background-color: #0bfb68;
     transform: scale(1.1);
 }
 
@@ -109,7 +109,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: auto; /* Allow the container to expand based on content */
+    height: auto;
 }
 
 #graph-container img {
@@ -129,17 +129,21 @@ body {
     height: 100%;
 }
 
+#hostInput::placeholder, #portInput::placeholder, #messageInput::placeholder {
+    color: #888;
+}
+
 .message {
     display: flex;
     align-items: flex-start;
     margin-bottom: 15px;
-    flex-wrap: wrap; /* Allow the message to wrap */
+    flex-wrap: wrap;
 }
 
 .message .content {
     padding: 10px;
-    max-width: 100%; /* Allow the content to expand fully */
-    word-wrap: break-word; /* Ensure long words break to fit */
+    max-width: 100%;
+    word-wrap: break-word;
     display: flex;
     flex-direction: column;
 }
@@ -170,8 +174,8 @@ body {
 }
 
 .message .content img {
-    max-width: 100%; /* Ensure images fit within the content */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 12px; /* Optional: add border radius to images */
-    margin-top: 10px; /* Optional: add margin to separate images from text */
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    margin-top: 10px;
 }

@@ -11,8 +11,6 @@ from transmission import *
 """
 Classe de teste de envio e recebimento de mensagens.
 """
-
-
 class TestMessageTransmission(unittest.TestCase):
     logger = Logger().get_logger()
     host = 'localhost'
@@ -23,7 +21,7 @@ class TestMessageTransmission(unittest.TestCase):
     """
 
     def setUp(self):
-        self.message = "Olá, mundo! Teste áàãâéè~eêíìî~iõóòôúù~uûüïöëäç!@#$%¨&*()_+{`^}?:><-=[]~´/;.,°ºª¬¢£³²¹\"\'' 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ æøåÆØÅ ςερτυθιοπλκξηγφδσαζχψωβνμ ςΕΡΤΥΘΙΟΠΛΚΞΗΓΦΔΣΑΖΧΨΩΒΝΜ あいうえおはひふへほさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん ぁぃぅぇぉゃゅょっゎゐゑゔゕゖ゗゘゙゚゛゜ゝゞゟ゠ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶヷヸヹヺ・ーヽヾヿ"
+        self.message = "Olá, mundo! Teste áàãâéè~eêíìî~iõóòôúù~uûüïöëäç!@#$%¨&*()_+{`^}?:><-=[]~´/;.,°ºª¬¢£³²¹\"\'' 0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ æøåÆØÅ"
         self.logger.info(f"Message to send: {self.message}")
 
         # Create a socket and bind to the host and port

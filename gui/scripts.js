@@ -2,18 +2,33 @@
  * @file scripts.js
  * @brief Arquivo de scripts da interface gráfica do usuário.
  */
-
 let isSending = false
+let ws
 
 /**
- * @brief Escutador de eventos de conexão com o servidor WebSocket.
- * @param event Evento de conexão.
+ * @brief Obtém o endereço do servidor WebSocket e inicia a conexão.
  */
-ws.onmessage = function(event) {
-    const message = JSON.parse(event.data)
-    displayMessage(message.message, 'received', message)
-    reloadSVG()
-}
+pywebview.api.get_websocket_url().then(url => {
+    ws = new WebSocket(url);
+
+    ws.onopen = function(event) {
+        console.log('WebSocket connection opened:', event);
+    };
+
+    ws.onerror = function(event) {
+        console.error('WebSocket error:', event);
+    };
+
+    ws.onclose = function(event) {
+        console.log('WebSocket connection closed:', event);
+    };
+
+    ws.onmessage = function(event) {
+        const message = JSON.parse(event.data);
+        displayMessage(message.message, 'received', message);
+        reloadSVG();
+    };
+});
 
 /**
  * @brief Escutador de eventos de erro de conexão com o servidor WebSocket.
@@ -124,15 +139,20 @@ function reloadSVG() {
  */
 function pollReceivedMessage() {
     pywebview.api.get_received_message().then(response => {
+        pywebview.api.log_message('Received response: ' + JSON.stringify(response));
         if (response.message) {
-            displayMessage(response.message, 'received', response)
+            displayMessage(response.message, 'received', response);
+            pywebview.api.log_message('Message displayed: ' + response.message);
+        } else {
+            pywebview.api.log_message('No message received');
         }
     }).catch(error => {
-        console.error('Error fetching received message:', error)
+        pywebview.api.log_message('Error fetching received message: ' + error);
     }).finally(() => {
-        setTimeout(pollReceivedMessage, 3000)
-    })
+        setTimeout(pollReceivedMessage, 3000);
+    });
 }
+
 
 /**
  * @brief Task que verifica se há arquivos de gráficos a serem atualizados.

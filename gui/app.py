@@ -54,7 +54,19 @@ class App:
     Obtém a mensagem recebida.
     """
     def get_received_message(self):
-        return self.received_message
+        return MessageReceiver.get_message_received()
+
+    """
+    Define a URL do WebSocket.
+    """
+    def set_websocket_url(self, url):
+        self.websocket_url = url
+
+    """
+    Obtém a URL do WebSocket.
+    """
+    def get_websocket_url(self):
+        return self.websocket_url
 
     """
     Inicia a aplicação.
@@ -63,4 +75,4 @@ class App:
         script_dir = os.path.dirname(__file__)
         index_path = os.path.join(script_dir, 'index.html')
         window = webview.create_window('Team Data Pulse - 2B1Q', index_path, width=1050, height=775, js_api=self)
-        webview.start()
+        webview.start(debug=True)
