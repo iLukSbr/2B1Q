@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
-from tests.logger import Logger
-import webbrowser
 import os
+import webbrowser
+
+from tests.logger import Logger
 
 """
 Classe geradora de gráficos.

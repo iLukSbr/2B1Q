@@ -1,12 +1,21 @@
-import logging
 from colorlog import ColoredFormatter
 import inspect
+import logging
 import os
 
+"""
+Logger personalizado para exibir o nível colorido, horário, nome do script, classe e função que chamou o logger.
+"""
 class Logger:
+    """
+    Inicializa o dicionário de loggers.
+    """
     def __init__(self):
         self.loggers = {}
 
+    """
+    Obtém o logger com o nome do script, classe e função que chamou o logger.
+    """
     def get_logger(self):
         frame = inspect.stack()[1]
         module = inspect.getmodule(frame[0])

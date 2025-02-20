@@ -1,8 +1,10 @@
-from message_codecs import *
-from tests import Logger
-from graph import Graph
+import os
 import tkinter as tk
 from tkinter import messagebox
+
+from graph import Graph
+from tests import Logger
+from message_codecs import *
 
 """
 Esta classe utiliza as funções de decodificação e descriptografia  do message_codecs para receber mensagens.
@@ -56,7 +58,9 @@ class MessageReceiver:
             MessageReceiver.message = BinaryConverter.utf8_from_binary(MessageReceiver.decoded_message)
             MessageReceiver.logger.info(f"Message: {MessageReceiver.message}")
 
-        Graph.create_graph(MessageReceiver.signal, "Received 2B1Q Signal", "gui/received_signal.svg")
+        script_dir = os.path.dirname(__file__)
+        relative_path = os.path.join(script_dir, '../gui/received_signal.svg')
+        Graph.create_graph(MessageReceiver.signal, "Received 2B1Q Signal", relative_path)
 
         # Return the details as a JSON object
         return {

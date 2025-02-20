@@ -1,6 +1,7 @@
 import asyncio
 import os
 import webview
+
 from transmission import *
 
 """
@@ -61,5 +62,5 @@ class App:
     def run(self):
         script_dir = os.path.dirname(__file__)
         index_path = os.path.join(script_dir, 'index.html')
-        window = webview.create_window('Team Data Pulse - 2B1Q', index_path, width=1000, height=700, js_api=self)
+        window = webview.create_window('Team Data Pulse - 2B1Q', index_path, width=1050, height=775, js_api=self)
         webview.start()

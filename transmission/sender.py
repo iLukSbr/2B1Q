@@ -1,10 +1,10 @@
-import socket
-import configparser
 import os
+import socket
 import time
+
+from graph import Graph
 from message_codecs import *
 from tests import Logger
-from graph import Graph
 
 """
 Classe que envia mensagens para o servidor.
@@ -34,9 +34,11 @@ class MessageSender:
             signal = [1,-3,-3,1,3]
             MessageSender.logger.info(f"Signal: {signal}")
 
-        Graph.create_graph(signal, "Sent 2B1Q signal", "gui/sent_signal.svg")
+        script_dir = os.path.dirname(__file__)
+        relative_path = os.path.join(script_dir, '../gui/sent_signal.svg')
+        Graph.create_graph(signal, "Sent 2B1Q signal", relative_path)
 
-        # Return the details as a JSON object
+        # Retorna os detalhes da mensagem em um dicionário.
         return {
             "status": "Ready to Send",
             "raw_message": message,
@@ -45,6 +47,9 @@ class MessageSender:
             "encoded_message": signal
         }
 
+    """
+    Envia um sinal para o servidor.
+    """
     @staticmethod
     def send_signal(signal, host, port):
         port = int(port)

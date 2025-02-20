@@ -2,7 +2,9 @@
 Algoritmo de codificação de linha 2B1Q, extraído de um repositório do GitHub, com algumas modificações.
 """
 class LineCode2B1Q:
-    # Função auxiliar para mapear pares de bits para sinais e vice-versa
+    """
+    Função auxiliar para mapear pares de bits para sinais e vice-versa
+    """
     @staticmethod
     def map_bits_to_signal(pair, previous_level, mapping_pos, mapping_neg):
         if previous_level > 0:
@@ -10,7 +12,9 @@ class LineCode2B1Q:
         else:
             return mapping_neg.get(pair, previous_level)
 
-    # Função para aplicar o algoritmo 2B1Q
+    """
+    Função para aplicar o algoritmo 2B1Q
+    """
     @staticmethod
     def apply_2b1q(data):
         # Estado inicial
@@ -41,7 +45,9 @@ class LineCode2B1Q:
 
         return signal
 
-    # Função para decodificar o sinal codificado em 2B1Q
+    """
+    Função para decodificar o sinal codificado em 2B1Q
+    """
     @staticmethod
     def decode_2b1q(data):
         # Estado inicial

@@ -2,6 +2,9 @@
 
 from setuptools import setup, find_packages
 
+"""
+Instala o projeto como um pacote 2B1Q.
+"""
 setup(
     name="2B1Q",
     version="0.1",
@@ -9,7 +12,8 @@ setup(
     package_dir={"": "src"},
     entry_points={
         "console_scripts": [
-            "2b1q = main:main"
+            "2b1q = main:main",
+            "2b1q-test = tests.test:main"
         ],
     },
     install_requires=open("requirements.txt").read().splitlines(),

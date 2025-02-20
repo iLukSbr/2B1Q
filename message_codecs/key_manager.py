@@ -1,7 +1,7 @@
-from cryptography.fernet import Fernet
-from tests.logger import Logger
-import os
 import base64
+from cryptography.fernet import Fernet
+import os
+from tests.logger import Logger
 
 """
 Fermat usa um gerador de números aleatórios criptograficamente seguro para gerar 32 bytes de dados aleatórios.

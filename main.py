@@ -1,22 +1,30 @@
 import asyncio
 import configparser
-import websockets
 import json
 import netifaces
 import socket
 import threading
+import websockets
+
 from gui import App
 
+"""
+Obtém o endereço IPv4 da conexão atual da máquina.
+"""
 def get_local_ip():
     interfaces = netifaces.interfaces()
     for interface in interfaces:
         addresses = netifaces.ifaddresses(interface)
         if netifaces.AF_INET in addresses:
-            # ipv4_info = addresses[netifaces.AF_INET][0]
-            return '10.181.2.241'
-            # return ipv4_info['addr']
+            ipv4_info = addresses[netifaces.AF_INET][0]
+            gateway = netifaces.gateways().get('default', {}).get(netifaces.AF_INET)
+            if gateway and gateway[1] == interface:
+                return ipv4_info['addr']
     return None
 
+"""
+Gerenciador de eventos do WebSocket da interface gráfica do usuário.
+"""
 async def websocket_handler(websocket, path, app_instance):
     while True:
         if app_instance.message_changed:
@@ -25,6 +33,9 @@ async def websocket_handler(websocket, path, app_instance):
                 await websocket.send(json.dumps(message))
         await asyncio.sleep(1)
 
+"""
+Inicia o servidor de mensagens.
+"""
 def start_server(app_instance):
     config = configparser.ConfigParser()
     config.read('config.ini')
@@ -41,12 +52,18 @@ def start_server(app_instance):
             print(f"Connected by {addr}")
             threading.Thread(target=handle_client, args=(conn, app_instance)).start()
 
+"""
+Lida com um cliente de mensagens.
+"""
 def handle_client(conn, app_instance):
     with conn:
         response = app_instance.receive_message(conn)
 
+"""
+Inicia o servidor de WebSocket da interface gráfica do usuário.
+"""
 async def start_websocket_server(app_instance):
-    start_server = websockets.serve(lambda ws, path: websocket_handler(ws, path, app_instance), "localhost", 6789)
+    start_server = websockets.serve(lambda ws, path: websocket_handler(ws, path, app_instance), "localhost", 54321)
     await start_server
 
 if __name__ == '__main__':
